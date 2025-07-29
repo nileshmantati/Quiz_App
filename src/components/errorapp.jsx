@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button, Card } from "react-bootstrap";
 import { motion } from 'framer-motion';
 import questions from './Questions';
@@ -9,10 +9,12 @@ function Quiz({ onFinish }) {
     const [score, setScore] = useState(0);
     const [selected, setSelected] = useState(null);
     const [timeLeft, setTimeLeft] = useState(5);
+    const answeredRef = useRef(false);
 
     const handleAnswer = useCallback((selectedIdx) => {
         const correctIndex = questions[current].correctIndex;
         setSelected(selectedIdx);
+        answeredRef.current = true;
 
         const isCorrect = selectedIdx !== null && selectedIdx === correctIndex;
         const nextScore = isCorrect ? score + 1 : score;
@@ -29,19 +31,20 @@ function Quiz({ onFinish }) {
     }, [current, score, onFinish]);
 
     useEffect(() => {
-        if (timeLeft === 0) {
-            handleAnswer(null);
-            return;
-        }
-        const timer = setTimeout(() => {
-            setTimeLeft(prev => prev - 1);
+        setTimeLeft(5);
+        answeredRef.current = false;
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev === 1) {
+                    clearInterval(timer);
+                    if (!answeredRef.current) handleAnswer(null);
+                }
+                return prev - 1;
+            });
         }, 1000);
 
-        return () => clearTimeout(timer);
-    }, [timeLeft, handleAnswer]);
-
-    useEffect(() => {
-        setTimeLeft(5);
+        return () => clearInterval(timer);
     }, [current]);
 
     return (

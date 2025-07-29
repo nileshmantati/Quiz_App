@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Quiz from './components/Quiz';
+import Errorapp from './components/errorapp';
 import './App.css';
 import Result from './components/Result';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,7 +30,8 @@ function App() {
     <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: "100vh" }}>
       <h3 className="mb-3">High Score: {highScore}</h3>
       {quiz ?
-        <Quiz onFinish={handleFinish} />
+        // <Quiz onFinish={handleFinish} />
+        <Errorapp onFinish={handleFinish} />
         : <Result score={score} onRestart={handleRestart} highScore={highScore} />}
     </div>
   );
