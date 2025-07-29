@@ -1,38 +1,57 @@
-.App {
+/* App.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  color: black;
+  padding: 20px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.quiz,
+.result {
+  background: #fff;
+  padding: 30px;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.btn {
+  margin-bottom: 10px;
+  font-size: 1.2rem !important;
+  cursor: pointer;
+  background-color: black !important;
+  color: white !important;
+  border: none !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.btn:hover {
+  background-color: transparent !important;
+  color: black !important;
+  outline: 1px solid black !important;
 }
 
-.App-link {
-  color: #61dafb;
+.timer {
+  margin-top: 20px;
+  font-weight: bold;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn.correct {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.btn.wrong {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.btn:disabled {
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+}
+
+.quiz {
+  transition: opacity 0.4s ease-in-out;
 }

@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import Quiz from './components/Quiz';
 import './App.css';
+import Result from './components/Result';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const [quiz, setQuiz] = useState(true);
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(() => {
+    return Number(localStorage.getItem('highScore')) || 0;
+  });
+
+  const handleFinish = (finalScore) => {
+    setScore(finalScore);
+    setQuiz(false);
+    if (finalScore > highScore) {
+      localStorage.setItem('highScore', finalScore);
+      setHighScore(finalScore);
+    }
+  };
+
+  const handleRestart = () => {
+    setScore(0);
+    setQuiz(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <h3 className="mb-3">High Score: {highScore}</h3>
+      {quiz ?
+        <Quiz onFinish={handleFinish} />
+        : <Result score={score} onRestart={handleRestart} highScore={highScore} />}
     </div>
   );
 }
