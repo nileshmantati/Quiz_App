@@ -27,7 +27,7 @@ function Quiz({ onFinish }) {
             } else {
                 onFinish(nextScore);
             }
-        }, 1000);
+        }, 800);
     }, [current, score, onFinish]);
 
     useEffect(() => {
