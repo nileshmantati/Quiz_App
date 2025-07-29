@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button, Card } from "react-bootstrap";
 import { motion } from 'framer-motion';
 import questions from './Questions';
@@ -6,51 +6,46 @@ import '../App.css';
 
 function Quiz({ onFinish }) {
     const [current, setCurrent] = useState(0);
+    const [score, setScore] = useState(0);
     const [selected, setSelected] = useState(null);
     const [timeLeft, setTimeLeft] = useState(5);
+    const answeredRef = useRef(false);
 
-    const scoreRef = useRef(0);
-    const hasAnsweredRef = useRef(false);
-    const timerRef = useRef(null);
-
-    useEffect(() => {
-        setTimeLeft(5);
-        hasAnsweredRef.current = false;
-
-        timerRef.current = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    clearInterval(timerRef.current);
-                    if (!hasAnsweredRef.current) handleAnswer(null);
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-
-        return () => clearInterval(timerRef.current);
-    }, [current]);
-
-    const handleAnswer = (selectedIdx) => {
-        if (hasAnsweredRef.current) return;
-        hasAnsweredRef.current = true;
-        clearInterval(timerRef.current);
-
+    const handleAnswer = useCallback((selectedIdx) => {
         const correctIndex = questions[current].correctIndex;
-        const isCorrect = selectedIdx !== null && selectedIdx === correctIndex;
-
-        if (isCorrect) scoreRef.current += 1;
         setSelected(selectedIdx);
+        answeredRef.current = true;
+
+        const isCorrect = selectedIdx !== null && selectedIdx === correctIndex;
+        const nextScore = isCorrect ? score + 1 : score;
+        setScore(nextScore);
 
         setTimeout(() => {
             if (current < questions.length - 1) {
                 setCurrent(prev => prev + 1);
                 setSelected(null);
             } else {
-                onFinish(scoreRef.current);
+                onFinish(nextScore);
             }
         }, 1000);
-    };
+    }, [current, score, onFinish]);
+
+    useEffect(() => {
+        setTimeLeft(5);
+        answeredRef.current = false;
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev === 1) {
+                    clearInterval(timer);
+                    if (!answeredRef.current) handleAnswer(null);
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [current]);
 
     return (
         <div className="d-flex justify-content-center mt-5">

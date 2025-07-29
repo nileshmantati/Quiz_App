@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Quiz from './components/Quiz';
-import Errorapp from './components/errorapp';
+// import Quiz from './components/Quiz2';
 import './App.css';
 import Result from './components/Result';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -31,7 +31,7 @@ function App() {
       <h3 className="mb-3">High Score: {highScore}</h3>
       {quiz ?
         // <Quiz onFinish={handleFinish} />
-        <Errorapp onFinish={handleFinish} />
+        <Quiz onFinish={handleFinish} />
         : <Result score={score} onRestart={handleRestart} highScore={highScore} />}
     </div>
   );
